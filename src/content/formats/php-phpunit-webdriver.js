@@ -84,11 +84,17 @@ function tryCatch(tryStatement, catchStatement, exception) {
 }
 
 function assertTrue(expression) {
-  return "$this->assertTrue(" + expression.toString() + ");";
+  if (expression.message == 'isTextPresent')
+    return "$this->assertContains(" + expression.toString() + ");";
+  else
+    return "$this->assertTrue(" + expression.toString() + ");";
 }
 
 function assertFalse(expression) {
-  return "$this->assertFalse(" + expression.toString() + ");";
+  if (expression.message == 'isTextPresent')
+    return "$this->assertNotContains(" + expression.toString() + ");";
+  else
+    return "$this->assertFalse(" + expression.toString() + ");";
 }
 
 function verify(statement) {
@@ -300,7 +306,7 @@ WDAPI.Driver.prototype.findElements = function(locatorType, locator) {
 };
 
 WDAPI.Driver.prototype.isTextPresent = function(text) {
-  return '$this->assertContains("' + text + '", ' + this.ref + '->source())';
+  return '"' + text + '", ' + this.ref + '->source()';
 }
 
 WDAPI.Driver.prototype.getCurrentUrl = function() {
